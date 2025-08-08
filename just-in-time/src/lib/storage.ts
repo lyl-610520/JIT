@@ -17,3 +17,15 @@ export const idbStorage = {
     return all.map(String);
   },
 };
+
+export const musicBlob = {
+  async put(key: string, blob: Blob) {
+    await set(`music:${key}`, blob);
+  },
+  async get(key: string): Promise<Blob | undefined> {
+    return await get<Blob>(`music:${key}`);
+  },
+  async remove(key: string) {
+    await del(`music:${key}`);
+  },
+};

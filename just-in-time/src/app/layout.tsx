@@ -2,6 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import StickyPlayer from "./components/StickyPlayer";
+import AddToHomePrompt from "./components/AddToHomePrompt";
+import InitClient from "./components/InitClient";
+import IntroOverlay from "./components/IntroOverlay";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,7 +64,11 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <InitClient />
+          <IntroOverlay />
+          <StickyPlayer />
           {children}
+          <AddToHomePrompt />
         </ThemeProvider>
         <div id="modal-root" />
       </body>

@@ -25,7 +25,8 @@ export interface Countdown {
 export interface MusicTrack {
   id: string;
   name: string;
-  url: string;
+  url: string; // runtime object URL or static path
+  blobKey?: string; // if uploaded by user, persistent blob key
 }
 
 export interface AppState {
@@ -38,15 +39,20 @@ export interface AppState {
   countdown?: Countdown;
   musicQueue: MusicTrack[];
   currentTrackIndex: number;
-  accessories: string[]; // unlocked accessories keys
+  accessories: string[];
   currentAccessory?: string;
-  lastWakeDateISO?: string; // for daily limits
+  lastWakeDateISO?: string;
   lastSleepDateISO?: string;
+  enableSfx: boolean;
+  dailyReminder?: string; // "HH:MM"
 
   setLanguage: (lang: Language) => void;
   setThemeMode: (mode: ThemeMode) => void;
   setWeatherDislike: (w: WeatherDislike) => void;
   setPetName: (name: string) => void;
+
+  setEnableSfx: (v: boolean) => void;
+  setDailyReminder: (t?: string) => void;
 
   addPunch: (p: PunchRecord) => void;
   resetToday: () => void;
@@ -73,11 +79,15 @@ export const useAppStore = create<AppState>()(
       musicQueue: [],
       currentTrackIndex: 0,
       accessories: ["spring-basic", "summer-basic", "autumn-basic", "winter-basic"],
+      enableSfx: true,
 
       setLanguage: (language) => set({ language }),
       setThemeMode: (themeMode) => set({ themeMode }),
       setWeatherDislike: (weatherDislike) => set({ weatherDislike }),
       setPetName: (petName) => set({ petName }),
+
+      setEnableSfx: (enableSfx) => set({ enableSfx }),
+      setDailyReminder: (dailyReminder) => set({ dailyReminder }),
 
       addPunch: (p) => set((s) => ({ todayPunches: [p, ...s.todayPunches], allPunches: [p, ...s.allPunches] })),
       resetToday: () => set({ todayPunches: [] }),
@@ -94,7 +104,7 @@ export const useAppStore = create<AppState>()(
     {
       name: "jit-app-state",
       storage: createJSONStorage(() => idbStorage),
-      version: 1,
+      version: 2,
       partialize: (state) => state,
     }
   )

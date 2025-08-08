@@ -1,8 +1,17 @@
 "use client";
+import { useState } from "react";
 import { useAppStore, type Language, type ThemeMode, type WeatherDislike } from "@/store/appStore";
 
 export default function PageSettings() {
   const { language, themeMode, petName, weatherDislike, setLanguage, setThemeMode, setPetName, setWeatherDislike } = useAppStore();
+  const [enableSfx, setEnableSfx] = useState(true);
+  const resetAll = () => {
+    // Clear IndexedDB namespace and reload
+    indexedDB.databases?.().then(() => {
+      localStorage.clear();
+      location.reload();
+    });
+  };
 
   return (
     <div className="min-h-screen safe-pt safe-pb p-6 theme-transition">
@@ -48,7 +57,13 @@ export default function PageSettings() {
         </div>
 
         <div className="glass rounded-3xl p-6">
-          <div className="text-lg mb-2">智能通知</div>
+          <div className="text-lg mb-2">声音与通知</div>
+          <div className="flex items-center gap-3 mb-3">
+            <label className="flex items-center gap-2">
+              <input type="checkbox" checked={enableSfx} onChange={(e) => setEnableSfx(e.target.checked)} />
+              <span>轻声音效</span>
+            </label>
+          </div>
           <div className="opacity-70 mb-4">稍后将提供每日提醒时间与权限申请。</div>
           <div className="flex gap-3">
             <button
@@ -61,6 +76,23 @@ export default function PageSettings() {
               申请通知权限
             </button>
           </div>
+        </div>
+
+        <div className="glass rounded-3xl p-6">
+          <div className="text-lg mb-2">回到最初的时光</div>
+          <div className="opacity-70 mb-4">清除所有数据并回到最初状态。</div>
+          <button
+            className="liquid rounded-xl px-4 py-2"
+            onClick={() => {
+              const confirmed = confirm("这会清除全部数据。\n\n我再想想 / 我明白");
+              if (confirmed) {
+                alert("你即将涅槃重生，恭喜进入下一阶段。");
+                resetAll();
+              }
+            }}
+          >
+            开始重置
+          </button>
         </div>
       </div>
     </div>
