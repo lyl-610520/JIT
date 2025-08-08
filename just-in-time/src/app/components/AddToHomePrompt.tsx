@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useAppStore } from "@/store/appStore";
+import { t } from "@/lib/i18n";
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -10,6 +12,7 @@ interface BeforeInstallPromptEvent extends Event {
 export default function AddToHomePrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
+  const lang = useAppStore((s) => s.language);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -25,7 +28,7 @@ export default function AddToHomePrompt() {
 
   return (
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 glass rounded-2xl p-4 flex items-center gap-3 shadow-lg">
-      <div className="text-sm opacity-80">将“恰逢其时”添加到主屏幕，获得沉浸体验</div>
+      <div className="text-sm opacity-80">{t(lang, "ctaAddToHome")}</div>
       <button
         className="liquid rounded-xl px-3 py-1 text-sm"
         onClick={async () => {
@@ -35,9 +38,9 @@ export default function AddToHomePrompt() {
           setVisible(false);
         }}
       >
-        添加
+        {lang === "zh" ? "添加" : "Add"}
       </button>
-      <button className="px-2 py-1 text-sm opacity-70" onClick={() => setVisible(false)}>稍后</button>
+      <button className="px-2 py-1 text-sm opacity-70" onClick={() => setVisible(false)}>{lang === "zh" ? "稍后" : "Later"}</button>
     </div>
   );
 }

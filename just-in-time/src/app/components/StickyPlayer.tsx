@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppStore, type MusicTrack } from "@/store/appStore";
 import { musicBlob } from "@/lib/storage";
+import { t } from "@/lib/i18n";
 
 function useAudioController() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -46,14 +47,19 @@ export default function StickyPlayer() {
   const enqueue = useAppStore((s) => s.enqueueTracks);
   const queue = useAppStore((s) => s.musicQueue);
   const index = useAppStore((s) => s.currentTrackIndex);
+  const lang = useAppStore((s) => s.language);
 
-  // seed initial 3 tracks using public audio paths
+  // seed initial 3 tracks using royalty-free Pixabay links
   useEffect(() => {
     if (queue.length === 0) {
-      const base = (name: string): MusicTrack => ({ id: name, name, url: "/audio/" + name + ".mp3" });
-      enqueue([base("曲目一"), base("曲目二"), base("曲目三")]);
+      const picks: MusicTrack[] = [
+        { id: "track1", name: lang === "zh" ? "曲目一" : "Track 1", url: "https://cdn.pixabay.com/download/audio/2023/07/10/audio_8d1c0715c0.mp3?filename=calm-ambient-146661.mp3" },
+        { id: "track2", name: lang === "zh" ? "曲目二" : "Track 2", url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_7b2a70ec9c.mp3?filename=soft-piano-ambient-110058.mp3" },
+        { id: "track3", name: lang === "zh" ? "曲目三" : "Track 3", url: "https://cdn.pixabay.com/download/audio/2021/09/07/audio_6a05e044c8.mp3?filename=relaxing-ambient-10711.mp3" },
+      ];
+      enqueue(picks);
     }
-  }, [queue.length, enqueue]);
+  }, [queue.length, enqueue, lang]);
 
   // reconstruct object URLs for uploaded tracks on mount or refresh
   useEffect(() => {
@@ -79,9 +85,7 @@ export default function StickyPlayer() {
         }
       }
       if (changed) {
-        enqueue([]); // trigger persist
-        // replace queue order preserving
-        // Since we don't have a direct setter, enqueueing empty won't help; instead we can no-op by playing at index
+        enqueue([]);
       }
     })();
   }, []);
@@ -91,7 +95,7 @@ export default function StickyPlayer() {
   return (
     <div className="fixed left-1/2 -translate-x-1/2 top-4 z-50 glass rounded-full px-4 py-2 flex items-center gap-3 shadow-lg">
       <button aria-label="toggle" onClick={toggle} className="liquid rounded-full px-3 py-1 text-sm">
-        {isPlaying ? "暂停" : "播放"}
+        {isPlaying ? t(lang, "pause") : t(lang, "play")}
       </button>
       <div className="flex gap-2 max-w-[48vw] overflow-x-auto">
         {queue.map((t, i) => (

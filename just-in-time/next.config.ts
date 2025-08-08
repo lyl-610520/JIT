@@ -41,6 +41,14 @@ export default withPWA({
         },
       },
       {
+        urlPattern: ({ request }) => request.destination === "audio",
+        handler: "CacheFirst",
+        options: {
+          cacheName: "audio-cache",
+          expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 30 },
+        },
+      },
+      {
         urlPattern: ({ url }) => url.pathname.startsWith("/api/"),
         handler: "NetworkFirst",
         options: {
