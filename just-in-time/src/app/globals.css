@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 242 25% 97%;
+  --foreground: 222 40% 11%;
+  --glass-bg: 0 0% 100% / 0.12;
+  --glass-border: 0 0% 100% / 0.25;
+}
+
+.dark {
+  --background: 212 36% 6%;
+  --foreground: 210 20% 98%;
+  --glass-bg: 0 0% 100% / 0.06;
+  --glass-border: 0 0% 100% / 0.18;
+}
+
+html, body {
+  height: 100%;
+  color-scheme: light dark;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+::selection { background-color: color-mix(in oklab, hsl(var(--foreground)) 15%, transparent); color: hsl(var(--foreground)); }
+*::selection { background-color: color-mix(in oklab, hsl(var(--foreground)) 15%, transparent); color: hsl(var(--foreground)); }
+
+.bg-background {
+  background-color: hsl(var(--background));
+}
+.text-foreground {
+  color: hsl(var(--foreground));
+}
+
+/* Glassmorphism */
+.glass {
+  background: color-mix(in oklab, white 5%, transparent);
+  background-color: hsla(var(--background) / 0.25);
+  -webkit-backdrop-filter: saturate(160%) blur(16px);
+  backdrop-filter: saturate(160%) blur(16px);
+  border: 1px solid color-mix(in oklab, hsl(var(--foreground)) 6%, transparent);
+  border-color: hsla(var(--foreground) / 0.12);
+}
+
+.liquid {
+  background: radial-gradient(1200px 800px at 10% -10%, rgba(255,255,255,.06), transparent),
+              radial-gradient(800px 600px at 110% 10%, rgba(255,255,255,.08), transparent),
+              radial-gradient(500px 400px at -10% 120%, rgba(255,255,255,.06), transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* Smooth theme transitions */
+.theme-transition *, .theme-transition {
+  transition: background-color .45s ease, color .45s ease, border-color .45s ease, box-shadow .45s ease, filter .45s ease;
+}
+
+/* Safe-area helpers */
+.safe-pt { padding-top: env(safe-area-inset-top); }
+.safe-pb { padding-bottom: env(safe-area-inset-bottom); }
+.safe-pl { padding-left: env(safe-area-inset-left); }
+.safe-pr { padding-right: env(safe-area-inset-right); }
