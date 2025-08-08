@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+/* Tailwind base */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 246 247 251; /* light */
+  --fg: 20 24 32;
+  --glass-bg: 255 255 255 / 0.28;
+  --glass-border: 255 255 255 / 0.35;
+  --blur: 18px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root { 
+    --bg: 14 17 23; /* dark */
+    --fg: 235 238 245;
+    --glass-bg: 13 16 22 / 0.45;
+    --glass-border: 255 255 255 / 0.16;
+    --blur: 22px;
+  }
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+  color: rgb(var(--fg));
+  background: rgb(var(--bg));
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glass + liquid glass */
+.glass {
+  backdrop-filter: blur(var(--blur)) saturate(120%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(120%);
+  background: color-mix(in oklab, rgba(var(--glass-bg)), transparent 20%);
+  border: 1px solid color-mix(in oklab, rgba(var(--glass-border)), transparent 50%);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.liquid {
+  background: radial-gradient(1200px circle at var(--x,50%) var(--y,50%), rgba(255,255,255,0.12), transparent 40%);
+}
+
+/* Smooth transitions for theme/bg */
+* {
+  transition: background-color 400ms ease, color 300ms ease, border-color 300ms ease, opacity 300ms ease;
+}
+
+.safe-area-pads {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
