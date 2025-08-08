@@ -11,6 +11,13 @@ export default function InitClient() {
   useEffect(() => {
     document.documentElement.classList.add("theme-transition");
     const timer = setTimeout(() => document.documentElement.classList.remove("theme-transition"), 600);
+    // In dev, proactively unregister any stale service workers to avoid cache-related blank screens after moving directories
+    if (process.env.NODE_ENV === "development" && "serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister()));
+      if (caches && caches.keys) {
+        caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+      }
+    }
     return () => clearTimeout(timer);
   }, []);
 
